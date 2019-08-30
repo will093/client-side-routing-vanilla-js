@@ -7,16 +7,15 @@
 <body>
   <header>
     <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="#" onclick="loadRoute('')">Home</a></li>
+      <li><a href="#" onclick="loadRoute('about')">About</a></li>
+      <li><a href="#" onclick="loadRoute('contact')">Contact</a></li>
     </ul>
   </header>
-  <div>
-    <h1>
-      Home
-    </h1>
+  <div data-router-outlet>
+
   </div>
+  <script src="js/router.js"></script>
 </body>
 
 </html>
