@@ -1,11 +1,14 @@
-const routes = {
-  '': {
+const routes = [
+  {
+    path: '/',
     template: '<h1>Home</h1>'
   },
-  'about': {
+  {
+    path: '/about',
     template: '<h1>About</h1>',
   },
-  'contact': {
+  {
+    path: '/contact',
     template: '<h1>Contact</h1>',
   },
-};
+];
