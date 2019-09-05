@@ -43,7 +43,7 @@ class Router {
         routePathSegments.forEach((segment, i) => {
           if (segment[0] === ':') {
             const propName = segment.slice(1);
-            routeParams[propName] = urlSegments[i];
+            routeParams[propName] = decodeURIComponent(urlSegments[i]);
           }
         });
       }
