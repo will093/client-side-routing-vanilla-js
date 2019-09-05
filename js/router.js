@@ -18,11 +18,12 @@ class Router {
     const routerOutletElement = document.querySelectorAll('[data-router-outlet]')[0];
     routerOutletElement.innerHTML = '';
     // insertAdjacentHtml preserves any event handlers (setting innerHTML does not).
-    routerOutletElement.insertAdjacentHTML('beforeend', matchedRoute.template);
+    routerOutletElement.insertAdjacentHTML('beforeend', matchedRoute.getTemplate(matchedRoute.params));
   }
 
   _matchUrlToRoute(urlSegments) {
     // Try and match the URL to a route.
+    const routeParams = {};
     const matchedRoute = this.routes.find(route => {
       // Assume that the route path always starts with a slash, and so the first item in the segments array 
       // will always be an empty string. Splice the array to ignore this empty string.
@@ -33,9 +34,23 @@ class Router {
       }
 
       // If each segment in the url matches the corresponding route path, then the route is matched.
-      return routePathSegments.every((routePathSegment, i) => routePathSegment === urlSegments[i]);
+      const match = routePathSegments.every((routePathSegment, i) => {
+        return routePathSegment === urlSegments[i] || routePathSegment[0] === ':';
+      });
+
+      // If the route matches the url, pull out any params from the URL.
+      if (match) {
+        routePathSegments.forEach((segment, i) => {
+          if (segment[0] === ':') {
+            const propName = segment.slice(1);
+            routeParams[propName] = urlSegments[i];
+          }
+        });
+      }
+
+      return match;
     });
-    return matchedRoute;
+    return { ...matchedRoute, params: routeParams };
   }
 
   _loadInitialRoute() {
