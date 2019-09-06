@@ -16,29 +16,31 @@ class Router {
 
     // Append the given template to the DOM inside the router outlet.
     const routerOutletElement = document.querySelectorAll('[data-router-outlet]')[0];
-    routerOutletElement.innerHTML = '';
-    // insertAdjacentHtml preserves any event handlers (setting innerHTML does not).
-    routerOutletElement.insertAdjacentHTML('beforeend', matchedRoute.getTemplate(matchedRoute.params));
+    routerOutletElement.innerHTML = matchedRoute.getTemplate(matchedRoute.params);
   }
 
   _matchUrlToRoute(urlSegments) {
     // Try and match the URL to a route.
     const routeParams = {};
     const matchedRoute = this.routes.find(route => {
-      // Assume that the route path always starts with a slash, and so the first item in the segments array 
-      // will always be an empty string. Splice the array to ignore this empty string.
+      
+      // We assume that the route path always starts with a slash, and so 
+      // the first item in the segments array  will always be an empty
+      // string. Slice the array at index 1 to ignore this empty string.
       const routePathSegments = route.path.split('/').slice(1);
+
       // If there are different numbers of segments, then the route does not match the URL.
       if (routePathSegments.length !== urlSegments.length) {
         return false;
       }
 
-      // If each segment in the url matches the corresponding route path, then the route is matched.
+      // If each segment in the url matches the corresponding segment in the route path, 
+      // or the route path segment starts with a ':' then the route is matched.
       const match = routePathSegments.every((routePathSegment, i) => {
         return routePathSegment === urlSegments[i] || routePathSegment[0] === ':';
       });
 
-      // If the route matches the url, pull out any params from the URL.
+      // If the route matches the URL, pull out any params from the URL.
       if (match) {
         routePathSegments.forEach((segment, i) => {
           if (segment[0] === ':') {
@@ -47,9 +49,9 @@ class Router {
           }
         });
       }
-
       return match;
     });
+    
     return { ...matchedRoute, params: routeParams };
   }
 
